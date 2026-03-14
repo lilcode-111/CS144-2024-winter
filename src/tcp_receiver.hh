@@ -3,6 +3,8 @@
 #include "reassembler.hh"
 #include "tcp_receiver_message.hh"
 #include "tcp_sender_message.hh"
+#include "wrapping_integers.hh"
+#include <cstdint>
 
 class TCPReceiver
 {
@@ -27,4 +29,8 @@ public:
 
 private:
   Reassembler reassembler_;
+  bool syn_{false};
+  bool fin_{false};
+  Wrap32 zero_point_{0}; 
+
 };
