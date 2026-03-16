@@ -1,6 +1,9 @@
 #pragma once
 
+#include <cstddef>
+#include <cstdint>
 #include <queue>
+#include <unordered_map>
 
 #include "address.hh"
 #include "ethernet_frame.hh"
@@ -74,11 +77,22 @@ private:
   void transmit( const EthernetFrame& frame ) const { port_->transmit( *this, frame ); }
 
   // Ethernet (known as hardware, network-access-layer, or link-layer) address of the interface
-  EthernetAddress ethernet_address_;
+  EthernetAddress ethernet_address_;  // 自己的MAC地址
 
   // IP (known as internet-layer or network-layer) address of the interface
-  Address ip_address_;
+  Address ip_address_;    // 自己的ip地址
 
   // Datagrams that have been received
   std::queue<InternetDatagram> datagrams_received_ {};
+
+  struct ARPEntry{
+    EthernetAddress ethernet_address;
+    size_t ttl_ms;
+  };
+
+  std::unordered_map<uint32_t, ARPEntry>arp_table_{};   //ip->MAC
+  std::unordered_map<uint32_t, std::queue<InternetDatagram>> waiting_dgram{};
+  std::unordered_map<uint32_t, size_t> arp_request_timer{};
+
+
 };
