@@ -1,8 +1,12 @@
 #pragma once
 
+#include <cstddef>
+#include <cstdint>
 #include <memory>
 #include <optional>
+#include <vector>
 
+#include "address.hh"
 #include "exception.hh"
 #include "network_interface.hh"
 
@@ -35,4 +39,11 @@ public:
 private:
   // The router's collection of network interfaces
   std::vector<std::shared_ptr<NetworkInterface>> _interfaces {};
+  struct RouteEntry{
+    uint32_t route_prefix;
+    uint8_t prefix_length;
+    std::optional<Address> next_hop;
+    size_t interface_num; 
+  };
+  std::vector<RouteEntry>_routes {};
 };
